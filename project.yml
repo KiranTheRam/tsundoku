@@ -1,0 +1,136 @@
+name: Tsundoku
+options:
+  bundleIdPrefix: com.example
+  deploymentTarget:
+    iOS: "26.0"
+  xcodeVersion: "27.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: complete
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "43"
+    GENERATE_INFOPLIST_FILE: YES
+    DEVELOPMENT_TEAM: "$(PERSONAL_DEVELOPMENT_TEAM)"
+    ANILIST_CLIENT_ID: "$(PERSONAL_ANILIST_CLIENT_ID)"
+    MAL_CLIENT_ID: "$(PERSONAL_MAL_CLIENT_ID)"
+    SWIFT_EMIT_LOC_STRINGS: YES
+    ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
+    ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+configs:
+  Debug: debug
+  Release: release
+targets:
+  Tsundoku:
+    type: application
+    platform: iOS
+    sources:
+      - path: Tsundoku
+    dependencies:
+      - target: TsundokuWidgets
+        embed: true
+    configFiles:
+      Debug: Config/Debug.xcconfig
+      Release: Config/Release.xcconfig
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "$(APP_BUNDLE_IDENTIFIER)"
+    info:
+      path: Tsundoku/Resources/Info.plist
+      properties:
+        CFBundleDisplayName: Tsundoku
+        ITSAppUsesNonExemptEncryption: false
+        NSSupportsLiveActivities: true
+        UILaunchScreen: {}
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        UISupportedInterfaceOrientations~ipad:
+          - UIInterfaceOrientationPortrait
+          - UIInterfaceOrientationPortraitUpsideDown
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        NSLocalNetworkUsageDescription: Tsundoku connects directly to your Komga or Kavita server to browse and read your library.
+        AniListClientID: "$(ANILIST_CLIENT_ID)"
+        MALClientID: "$(MAL_CLIENT_ID)"
+        NSAppTransportSecurity:
+          NSAllowsLocalNetworking: true
+        CFBundleURLTypes:
+          - CFBundleURLName: tracker-oauth
+            CFBundleURLSchemes:
+              - tsundoku
+              - tsundoku
+        BGTaskSchedulerPermittedIdentifiers:
+          - com.example.Tsundoku.download.processing
+        UIBackgroundModes:
+          - fetch
+          - processing
+          - remote-notification
+    entitlements:
+      path: Tsundoku/Resources/Tsundoku.entitlements
+      properties:
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.$(PRODUCT_BUNDLE_IDENTIFIER)
+        com.apple.developer.icloud-services:
+          - CloudKit
+        com.apple.security.application-groups:
+          - group.com.example.Tsundoku
+        aps-environment: development
+  TsundokuWidgets:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: TsundokuWidgets
+      - path: Tsundoku/SystemIntegration/SystemSharedStore.swift
+    configFiles:
+      Debug: Config/Debug.xcconfig
+      Release: Config/Release.xcconfig
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "$(APP_BUNDLE_IDENTIFIER).Widgets"
+        GENERATE_INFOPLIST_FILE: YES
+        SKIP_INSTALL: YES
+    info:
+      path: TsundokuWidgets/Info.plist
+      properties:
+        CFBundleDisplayName: Tsundoku Widgets
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    entitlements:
+      path: TsundokuWidgets/TsundokuWidgets.entitlements
+      properties:
+        com.apple.security.application-groups:
+          - group.com.example.Tsundoku
+  TsundokuTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: TsundokuTests
+    dependencies:
+      - target: Tsundoku
+    configFiles:
+      Debug: Config/Debug.xcconfig
+      Release: Config/Release.xcconfig
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: "$(APP_BUNDLE_IDENTIFIER).Tests"
+        GENERATE_INFOPLIST_FILE: YES
+        TEST_HOST: "$(BUILT_PRODUCTS_DIR)/Tsundoku.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tsundoku"
+        BUNDLE_LOADER: "$(TEST_HOST)"
+schemes:
+  Tsundoku:
+    build:
+      targets:
+        Tsundoku: all
+        TsundokuWidgets: all
+        TsundokuTests: [test]
+    test:
+      environmentVariables:
+        KAVITA_LIVE_URL: "$(KAVITA_LIVE_URL)"
+        KAVITA_LIVE_AUTH_KEY: "$(KAVITA_LIVE_AUTH_KEY)"
+      targets:
+        - TsundokuTests

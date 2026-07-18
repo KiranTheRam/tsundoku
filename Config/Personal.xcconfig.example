@@ -1,0 +1,5 @@
+// Copy to Personal.xcconfig. This file is intentionally gitignored.
+PERSONAL_DEVELOPMENT_TEAM = YOUR_TEAM_ID
+APP_BUNDLE_IDENTIFIER = com.example.Tsundoku
+PERSONAL_ANILIST_CLIENT_ID =
+PERSONAL_MAL_CLIENT_ID =

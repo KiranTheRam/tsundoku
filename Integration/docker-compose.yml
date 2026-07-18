@@ -1,0 +1,12 @@
+services:
+  komga:
+    image: gotson/komga:1.25.0
+    container_name: komga-reader-integration
+    ports:
+      - "25600:25600"
+    environment:
+      TZ: America/New_York
+    volumes:
+      - ./state:/config
+      - ./fixtures:/data
+    restart: unless-stopped

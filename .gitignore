@@ -1,0 +1,13 @@
+.DS_Store
+DerivedData/
+DerivedData*/
+.archive-derived-data/
+build/
+Build/
+*.xcuserstate
+xcuserdata/
+Config/Personal.xcconfig
+Tsundoku.xcodeproj/project.xcworkspace/xcuserdata/
+kavita_creds.txt
+*_creds.txt
+*.xcarchive/
